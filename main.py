@@ -1,7 +1,4 @@
 import sys
-
-import pygame
-
 from parking import *
 from gui import *
 from utils import *
@@ -24,7 +21,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                gui.check_click(event.pos, parking_system)
+                gui.handle_click(event.pos, parking_system)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False

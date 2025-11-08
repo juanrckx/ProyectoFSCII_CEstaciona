@@ -15,6 +15,9 @@ class ParkingSystem:
         self.display_value = 2
         self.pending_payment_vehicles = None
 
+        #Cargar datos al iniciar
+        self.load_data()
+
 
     def enter_vehicle(self):
         if self.available_space > 0:
@@ -25,7 +28,8 @@ class ParkingSystem:
             space = 1 if self.occupied_spaces == 0 else 2
 
             #Registro del vehiculo
-            self.parked_vehicles[vehicle_id] = {"entry_time": time.time(), "space": space,
+            self.parked_vehicles[vehicle_id] = {"entry_time": time.time(),
+                                                "space": space,
                                                 'entry_time_str': datetime.now().strftime("%H:%M:%S")}
 
             #Actualiza contadores
@@ -73,13 +77,15 @@ class ParkingSystem:
         fee = self.calculate_fee(parked_time)
 
         #Registrar en el historial
-        self.parked_vehicles_historial.append({"vehicle_id": vehicle_id,
-                                               "entry_time": dataset["entry_time_str"],
-                                               "exit_time": time.time(),
-                                               "parked_time": parked_time,
-                                               "fee": fee,
-                                               "entry_time_str": dataset["entry_time_str"],
-                                               "exit_time_str": datetime.now().strftime("%H:%M:%S")})
+        self.parked_vehicles_historial.append({
+            "vehicle_id": vehicle_id,
+            "entry_time": dataset["entry_time_str"],
+            "exit_time": time.time(),
+            "parked_time": parked_time,
+            "fee": fee,
+            "entry_time_str": dataset["entry_time_str"],
+            "exit_time_str": datetime.now().strftime("%H:%M:%S")
+        })
 
         #Liberar espacios
         del self.parked_vehicles[vehicle_id]
@@ -96,12 +102,15 @@ class ParkingSystem:
 
         return True
 
-    def calculate_fee(self, time):
-        stations = max(1, int(time) // 10)
+    def calculate_fee(self, time_seconds):
+        stations = max(1, int(time_seconds) // 10)
         return stations * self.base_fee
 
     def control_boom_barrier(self, state):
-        self.boom_barrier_state = state
+        if "abierta" in state.lower():
+            self.boom_barrier_state = "open"
+        else:
+            self.boom_barrier_state = "closed"
 
     def take_manual_space(self, space):
         if space == 1 and self.occupied_spaces == 0:
@@ -159,11 +168,12 @@ class ParkingSystem:
         data = {
             'vehicle_historial': self.parked_vehicles_historial,
             'config': {'base_fee': self.base_fee,
-                       'total_space': self.total_space,}
+                       'total_space': self.total_space,
+                       }
         }
         try:
             with open('data.json', 'w') as f:
-                json.dump(data, f, ident=2)
+                json.dump(data, f, indent=2)
         except:
             pass
 

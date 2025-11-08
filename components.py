@@ -42,7 +42,7 @@ class Display7Segment:
         self.y = y
         self.size = size
         self.value = "2"
-        self.mode = "Espacios disponibles"
+        self.mode = "Espacios"
         self.num_font = pygame.font.SysFont("Arial", size, bold=True)
         self.mode_font = pygame.font.SysFont("Arial", 20)
 
@@ -65,7 +65,7 @@ class Display7Segment:
     def update(self, value, mode="spaces"):
         self.value = str(value)
         if mode == "spaces":
-            self.mode = "Espacios disponibles"
+            self.mode = "Espacios"
         else:
             self.mode = "Costo (₡1000)"
 
@@ -75,7 +75,7 @@ class ParkingSite:
         self.y = y
         self.num = num
         self.occupied = False
-        self.rect = pygame.Rect(x, y, 200, 100)
+        self.rect = pygame.Rect(x, y, 270, 100)
         self.font = pygame.font.SysFont("Arial", 24, bold=True)
 
     def draw(self, screen):
@@ -101,8 +101,8 @@ class ParkingSite:
         pygame.draw.rect(screen, LIGHT_GRAY, release_button, border_radius=5)
 
         button_font = pygame.font.SysFont("Arial", 14)
-        occupy_text = button_font.render("Ocupar", True, WHITE)
-        release_text = button_font.render("Liberar", True, WHITE)
+        occupy_text = button_font.render("Ocupar", True, BLACK)
+        release_text = button_font.render("Liberar", True, BLACK)
 
         screen.blit(occupy_text, (occupy_button.centerx - occupy_text.get_width() //
                                   2, occupy_button.centery - occupy_text.get_height() // 2))
