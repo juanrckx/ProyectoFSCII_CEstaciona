@@ -9,7 +9,7 @@ class Button:
         self.hover_color = hover_color
         self.actual_color = color
         self.clicked = False
-        self.font = pygame.font.SysFont("Arial", 20)
+        self.font = pygame.font.SysFont("dejavusans", 20)
 
     def draw(self, screen):
         #Dibujar rectangulo del boton
@@ -43,8 +43,8 @@ class Display7Segment:
         self.size = size
         self.value = "2"
         self.mode = "Espacios"
-        self.num_font = pygame.font.SysFont("Arial", size, bold=True)
-        self.mode_font = pygame.font.SysFont("Arial", 20)
+        self.num_font = pygame.font.SysFont("dejavusans", size, bold=True)
+        self.mode_font = pygame.font.SysFont("dejavusans", 20)
 
     def draw(self, screen):
         #Fondo del display
@@ -67,7 +67,7 @@ class Display7Segment:
         if mode == "spaces":
             self.mode = "Espacios"
         else:
-            self.mode = "Costo (₡1000)"
+            self.mode = "Costo: 1000CRC"
 
 class ParkingSite:
     def __init__(self, x, y, num):
@@ -76,7 +76,7 @@ class ParkingSite:
         self.num = num
         self.occupied = False
         self.rect = pygame.Rect(x, y, 270, 100)
-        self.font = pygame.font.SysFont("Arial", 24, bold=True)
+        self.font = pygame.font.SysFont("dejavusans", 24, bold=True)
 
     def draw(self, screen):
         #Dibujar rectangulo del parking site
@@ -100,7 +100,7 @@ class ParkingSite:
         pygame.draw.rect(screen, LIGHT_GRAY, occupy_button, border_radius=5)
         pygame.draw.rect(screen, LIGHT_GRAY, release_button, border_radius=5)
 
-        button_font = pygame.font.SysFont("Arial", 14)
+        button_font = pygame.font.SysFont("dejavusans", 14)
         occupy_text = button_font.render("Ocupar", True, BLACK)
         release_text = button_font.render("Liberar", True, BLACK)
 
