@@ -2,10 +2,15 @@ import sys
 from parking import *
 from gui import *
 from utils import *
-
-
+from serial_com import *
 
 def main():
+    #Inicializar comunicación serial
+    ports = ['COM8', 'COM7']
+    if not init_serial_communication(ports):
+        print("No se pudo conectar al hardware")
+        return
+
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("CEstaciona - Sistema de Parqueo Inteligente")
@@ -21,20 +26,32 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                gui.handle_click(event.pos, parking_system)
+                gui.handle_click(event.pos, serial_comm)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
-        parking_system.update()
+        # Actualizar displays de ambos parqueos
+        for parking_id in [1, 2]:
+            parking_system = serial_comm.get_parking_system(parking_id)
+            if parking_system:
+                serial_comm.update_display(parking_id, 
+                                         parking_system.display_value,
+                                         parking_system.display_mode)
 
         screen.fill(GRAY)
-        gui.draw(screen, parking_system)
+        gui.draw(screen, serial_comm)
 
         pygame.display.update()
         clock.tick(FPS)
 
-    parking_system.save_data()
+    # Guardar datos de ambos parqueos
+    for parking_id in [1, 2]:
+        parking_system = serial_comm.get_parking_system(parking_id)
+        if parking_system:
+            parking_system.save_data()
+            
+    serial_comm.disconnect()
     pygame.quit()
     sys.exit()
 
