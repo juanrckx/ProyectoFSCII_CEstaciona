@@ -2,6 +2,11 @@ import time
 import json
 from datetime import datetime
 
+try:
+    from ApiBCCR import BCCRTipoCambio, usarApi
+except ImportError:
+    print("Advertencia: No se puedo importar ApiBCCR. Usando tipo de cambio fijo")
+
 class ParkingSystem:
     def __init__(self):
         self.total_space = 2
@@ -15,9 +20,32 @@ class ParkingSystem:
         self.display_value = 2
         self.pending_payment_vehicles = None
 
+        self.exchange_rate = 500 #Valor por defecto: se usa en caso de algun error de import
+        self.last_exchange_update = 0
+        self.exchange_update_interval = 3600 #Actualizar cada hora
+
+
         #Cargar datos al iniciar
         self.load_data()
 
+
+    def update_exchange_rate(self):
+        current_time = time.time()
+
+        if current_time - self.last_exchange_update < self.exchange_update_interval:
+            return
+
+        try:
+            from ApiBCCR import BCCRTipoCambio
+            new_rate = usarApi()
+            if new_rate and new_rate > 0:
+                self.exchange_rate = new_rate
+                self.last_exchange_update = current_time
+                print(f"Tipo de cambio actualizado: 1CRC = ${1/self.exchange_rate:.4f}")
+            else:
+                print("No se pudo obtener el tipo de cambio, usando valor anterior")
+        except Exception as e:
+            print(f"Error actualizando tipo de cambio: {e}. Usando valor: {self.exchange_rate}")
 
     def enter_vehicle(self):
         if self.available_space > 0:
@@ -133,6 +161,8 @@ class ParkingSystem:
             self.display_value = self.available_space
 
     def get_stats(self):
+        self.update_exchange_rate()
+
         total_vehicles = len(self.parked_vehicles_historial)
 
         if total_vehicles == 0:
@@ -140,7 +170,7 @@ class ParkingSystem:
                 'total_vehicles': 0,
                 'average_stance': 0,
                 'profits_colons': 0,
-                'profits_dollars': 0
+                'profits_dollars': self.exchange_rate
             }
 
         #Calcular promedio de estancia
@@ -150,14 +180,15 @@ class ParkingSystem:
         #Calcular ganancias
         profits_colons = sum(v['fee'] for v in self.parked_vehicles_historial)
 
-        #Simular tipo de cambio 500 por ahora
-        profits_dollars = profits_colons / 500
+        #Tipo de cambio según la API del Banco Central de Costa Rica
+        profits_dollars = profits_colons / self.exchange_rate
 
         return {
             'total_vehicles': total_vehicles,
             'average_stance': average_stance,
             'profits_colons': profits_colons,
-            'profits_dollars': profits_dollars
+            'profits_dollars': profits_dollars,
+            'exchange_rate': self.exchange_rate
         }
 
     def update(self):
@@ -169,7 +200,9 @@ class ParkingSystem:
             'vehicle_historial': self.parked_vehicles_historial,
             'config': {'base_fee': self.base_fee,
                        'total_space': self.total_space,
-                       }
+                       },
+            'exchange_rate': self.exchange_rate,
+            'last_exchange_update': self.last_exchange_update,
         }
         try:
             with open('data.json', 'w') as f:
@@ -183,5 +216,7 @@ class ParkingSystem:
             with open('data.json', 'r') as f:
                 data = json.load(f)
                 self.parked_vehicles_historial = data.get('vehicle_historial', [])
-        except:
-            pass
+                self.exchange_rate = data.get('exchange_rate', 500)
+                self.last_exchange_update = data.get('last_exchange_update', 0)
+        except FileNotFoundError:
+            print("Archivo de datos no encontrado, empezando con datos vacios")

@@ -1,12 +1,11 @@
-import pygame
 from components import *
 
 class ParkingGUI:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.font = pygame.font.SysFont("Arial", 24)
-        self.title_font = pygame.font.SysFont("Arial", 32, bold=True)
+        self.font = pygame.font.SysFont("dejavusans", 24)
+        self.title_font = pygame.font.SysFont("dejavusans", 32, bold=True)
 
         self.create_components()
 
@@ -19,14 +18,15 @@ class ParkingGUI:
             'enter': Button(50, 200, 150, 50, "Entrar Vehiculo"),
             'exit': Button(50, 270, 150, 50, "Pagar/Salir"),
             'open_boom_barrier': Button(50, 340, 150, 50, "Abrir aguja"),
-            'close_boom_barrier': Button(50, 410, 150, 50, "Cerrar aguja")
+            'close_boom_barrier': Button(50, 410, 150, 50, "Cerrar aguja"),
+            'update_exchange': Button(50, 520, 150, 50, "Actualizar TC"),
         }
         #Espacios de parqueo
         self.space1 = ParkingSite(300, 100, 1)
         self.space2 = ParkingSite(300, 250, 2)
 
         #Panel de estadisticas
-        self.stats_panel_rect = pygame.Rect(600, 100, 500, 300)
+        self.stats_panel_rect = pygame.Rect(600, 100, 500, 350)
 
     def draw(self, screen, system):
         #Actualizar componentes
@@ -51,6 +51,9 @@ class ParkingGUI:
 
         barrier_surface = self.font.render(f"Estado aguja: {barrier_text}", True, BLACK)
         screen.blit(barrier_surface, (50, 480))
+
+        exchange_text = self.font.render(f"Tipo de cambio: 1CRC = ${1/system.exchange_rate:.4f}", True, BLACK)
+        screen.blit(exchange_text, (50, 570))
 
         #Dibujar espacios de parqueo
         self.space1.draw(screen)
@@ -90,15 +93,20 @@ class ParkingGUI:
 
         #Dibujar estadisticas
         y_pos = self.stats_panel_rect.y + 60
+
+        exchange_info = self.font.render(f"Tipo de cambio: 1 CRC = ${1/stats.get('exchange_rate', 500):.4f}", True, BLACK)
+        screen.blit(exchange_info, (self.stats_panel_rect.x + 20, y_pos))
+        y_pos += 40
+
         for key, value in stats.items():
             if key == 'total_vehicles':
                 text = f"Vehiculos totales: {int(value)}"
             elif key == 'average_stance':
                 text = f"Estancia promedio: {value:.1f} seg"
             elif key == 'profits_colons':
-                text = f"Ganancias: ₡{int(value):,}"
+                text = f"Ganancias: {int(value):,}CRC"
             elif key == 'profits_dollars':
-                text = f"Ganancias: ${value:.2f} USD"
+                text = f"Ganancias: {value:.2f} USD"
             else:
                 continue
 
@@ -120,7 +128,6 @@ class ParkingGUI:
         if system.parked_vehicles:
             y_pos = vehicles_rect.y + 50
             for veh_id, data in system.parked_vehicles.items():
-                actual_time = pygame.time.get_ticks() // 1000
                 veh_text = f"{veh_id} - Espacio {data['space']} - Entrada: {data['entry_time_str']}"
 
                 surf_text = self.font.render(veh_text, True, BLACK)
@@ -148,7 +155,7 @@ class ParkingGUI:
                 #Primera pulsacion: mostrar costo
                 vehicle_id, fee = system.request_exit()
                 if vehicle_id:
-                    print(f"Vehiculo {vehicle_id} - Costo: ₡{fee}")
+                    print(f"Vehiculo {vehicle_id} - Costo: {fee}CRC")
 
         elif self.buttons['open_boom_barrier'].check_click(mouse_pos, True):
             system.control_boom_barrier("Aguja abierta")
