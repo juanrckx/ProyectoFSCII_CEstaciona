@@ -4,8 +4,11 @@ from parking import ParkingSystem
 from gui import ParkingGUI
 from utils import *
 from serial_com import *
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/main
 
 def main():
     #Inicializar comunicación serial
@@ -13,7 +16,11 @@ def main():
     if not init_serial_communication(ports):
         print("No se pudo conectar al hardware")
         return
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> origin/main
     pygame.init()
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -33,6 +40,7 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
+<<<<<<< HEAD
         for parking_id in [1, 2]:
             parking_system = serial_comm.get_parking_system(parking_id)
             if parking_system:
@@ -40,6 +48,15 @@ def main():
                                            parking_system.display_value,
                                            parking_system.display_mode)
 
+=======
+        # Actualizar displays de ambos parqueos
+        for parking_id in [1, 2]:
+            parking_system = serial_comm.get_parking_system(parking_id)
+            if parking_system:
+                serial_comm.update_display(parking_id, 
+                                         parking_system.display_value,
+                                         parking_system.display_mode)
+>>>>>>> origin/main
 
         screen.fill(GRAY)
         gui.draw(screen, serial_comm)
@@ -47,12 +64,20 @@ def main():
         pygame.display.update()
         clock.tick(FPS)
 
+<<<<<<< HEAD
     #Guardar datos de ambos parqueos
+=======
+    # Guardar datos de ambos parqueos
+>>>>>>> origin/main
     for parking_id in [1, 2]:
         parking_system = serial_comm.get_parking_system(parking_id)
         if parking_system:
             parking_system.save_data()
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/main
     serial_comm.disconnect()
     pygame.quit()
     sys.exit()
