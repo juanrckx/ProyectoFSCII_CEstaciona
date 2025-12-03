@@ -8,7 +8,8 @@ except ImportError:
     print("Advertencia: No se puedo importar ApiBCCR. Usando tipo de cambio fijo")
 
 class ParkingSystem:
-    def __init__(self):
+    def __init__(self, parking_id=1):
+        self.parking_id = parking_id
         self.total_space = 2
         self.available_space = 2
         self.occupied_spaces = 0
@@ -36,7 +37,6 @@ class ParkingSystem:
             return
 
         try:
-            from ApiBCCR import BCCRTipoCambio
             new_rate = usarApi()
             if new_rate and new_rate > 0:
                 self.exchange_rate = new_rate
@@ -170,7 +170,8 @@ class ParkingSystem:
                 'total_vehicles': 0,
                 'average_stance': 0,
                 'profits_colons': 0,
-                'profits_dollars': self.exchange_rate
+                'profits_dollars': 0,
+                'exchange_rate': self.exchange_rate
             }
 
         #Calcular promedio de estancia
@@ -205,18 +206,19 @@ class ParkingSystem:
             'last_exchange_update': self.last_exchange_update,
         }
         try:
-            with open('data.json', 'w') as f:
+            with open(f'data_parking{self.parking_id}.json', 'w') as f:
                 json.dump(data, f, indent=2)
-        except:
-            pass
+        except Exception as e:
+            print(f"Error guardando datos: {e}")
 
     def load_data(self):
         #Carga los datos desde un archivo json
         try:
-            with open('data.json', 'r') as f:
+            with open(f'data_parking{self.parking_id}.json', 'r') as f:
                 data = json.load(f)
                 self.parked_vehicles_historial = data.get('vehicle_historial', [])
                 self.exchange_rate = data.get('exchange_rate', 500)
                 self.last_exchange_update = data.get('last_exchange_update', 0)
         except FileNotFoundError:
-            print("Archivo de datos no encontrado, empezando con datos vacios")
+            print(f"Archivo de datos para parqueo {self.parking_id} no encontrado, empezando con datos vacíos")
+#aasdasdaadsa

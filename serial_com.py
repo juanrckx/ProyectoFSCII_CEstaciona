@@ -1,33 +1,32 @@
 import serial
 import json
 import threading
-import time
+import time 
 from parking import ParkingSystem
-
 
 class SerialCommunication:
     def __init__(self, ports=['COM8', 'COM7']):
         self.ports = ports
         self.serial_conns = {}
-        self.parking_systems = {}
         self.running = False
         self.threads = {}
 
         #Inicializar sistemas de parqueo
         for i, port in enumerate(ports, 1):
             self.parking_systems[i] = ParkingSystem(parking_id=i)
-    
+
     def connect(self):
         for i, port in enumerate(self.ports, 1):
             try:
                 conn = serial.Serial(port, 115200, timeout=1)
                 self.serial_conns[i] = conn
-                print(f"Conectado a Parqueo {i} en {port}")
+                print(f"Conectado a parqueo {i} en {port}")
+            
             except Exception as e:
                 print(f"Error conectando a {port}: {e}")
 
         return len(self.serial_conns) > 0
-
+    
     def disconnect(self):
         self.running = False
         for conn in self.serial_conns.values():
@@ -40,8 +39,8 @@ class SerialCommunication:
             if conn and conn.is_open:
                 command['parking_id'] = parking_id
                 message = json.dumps(command) + '\n'
-                conn.write(message.enconde())
-        
+                conn.write(message.encode())
+
         except Exception as e:
             print(f"Error enviando a parqueo {parking_id}: {e}")
 
@@ -67,7 +66,6 @@ class SerialCommunication:
 
         if not parking_system:
             return
-        
         if msg_type == 'sensor_update':
             space1_occupied = message.get('space1_occupied', False)
             space2_occupied = message.get('space2_occupied', False)
@@ -82,7 +80,7 @@ class SerialCommunication:
 
             if space2_occupied and current_spaces < 2:
                 parking_system.take_manual_space(2)
-            elif not space2_occupied and current_spaces == 2:
+            elif not space2_occupied and current_spaces >= 2:
                 parking_system.release_manual_space(2)
 
         elif msg_type == 'button_press':
@@ -96,30 +94,30 @@ class SerialCommunication:
                         'state': 'open'
                     })
                     threading.Timer(3, lambda: self.send_command(parking_id, {
-                        'type': 'barrier_control', 
-                        'state': 'closed'
-                    })).start()
-                    
-            elif button == 'exit':
-                if parking_system.pending_payment_vehicles:
-                    parking_system.confirm_exit()
-                    self.send_command(parking_id, {
                         'type': 'barrier_control',
-                        'state': 'open'
-                    })
-                    threading.Timer(3, lambda: self.send_command(parking_id, {
-                        'type': 'barrier_control', 
                         'state': 'closed'
                     })).start()
-                else:
-                    vehicle_id, fee = parking_system.request_exit()
-                    if vehicle_id:
+
+                elif button == 'exit':
+                    if parking_system.pending_payment_vehicles:
+                        parking_system.confirm_exit()
                         self.send_command(parking_id, {
-                            'type': 'display_update',
-                            'value': str(fee // 1000),
-                            'mode': 'fee'
+                            'type': 'barrier_control',
+                            'state': 'open'
                         })
-    
+                        threading.Timer(3, lambda: self.send_command(parking_id, {
+                            'type': 'barrier_control',
+                            'state': 'closed'
+                        })).start()
+                    
+                    else:
+                        vehicle_id, fee = parking_system.request_exit()
+                        if vehicle_id:
+                            self.send_command(parking_id, {
+                                'type': 'display_update',
+                                'value': str(fee // 1000),
+                                'mode': 'fee'
+                            })
 
     def start(self):
         if self.connect():
@@ -129,7 +127,7 @@ class SerialCommunication:
                 thread.daemon = True
                 thread.start()
                 self.threads[parking_id] = thread
-            
+
             return True
         return False
     
@@ -140,7 +138,7 @@ class SerialCommunication:
             'mode': mode
         })
 
-    def control_barrier(self,parking_id, state):
+    def control_barrier(self, parking_id, state):
         self.send_command(parking_id, {
             'type': 'barrier_control',
             'state': state
@@ -154,7 +152,7 @@ class SerialCommunication:
         })
 
     def get_parking_system(self, parking_id):
-        return self.parking_systems.get(parking_id)
+        return self.get_parking_system.get(parking_id)
     
     def get_all_parking_systems(self):
         return self.parking_systems
@@ -165,3 +163,5 @@ serial_comm = SerialCommunication()
 def init_serial_communication(ports=['COM8', 'COM7']):
     serial_comm.ports = ports
     return serial_comm.start()
+
+#asdasdas
