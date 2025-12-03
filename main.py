@@ -4,14 +4,30 @@ from parking import ParkingSystem
 from gui import ParkingGUI
 from utils import *
 from serial_com import *
+<<<<<<< HEAD
 
+<<<<<<< HEAD
+=======
+
+=======
+>>>>>>> origin/main
+
+>>>>>>> Juan_MAC
 def main():
     #Inicializar comunicación serial
     ports = ['COM8', 'COM7']
     if not init_serial_communication(ports):
         print("No se pudo conectar al hardware")
         return
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+    
+=======
+
+>>>>>>> origin/main
+>>>>>>> Juan_MAC
     pygame.init()
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -31,7 +47,11 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
+<<<<<<< HEAD
         # Actualizar displays de ambos parqueos
+=======
+<<<<<<< HEAD
+>>>>>>> Juan_MAC
         for parking_id in [1, 2]:
             if parking_system:
             parking_system = serial_comm.get_parking_system(parking_id)
@@ -39,6 +59,15 @@ def main():
                                          parking_system.display_value,
                                          parking_system.display_mode)
 
+=======
+        # Actualizar displays de ambos parqueos
+        for parking_id in [1, 2]:
+            parking_system = serial_comm.get_parking_system(parking_id)
+            if parking_system:
+                serial_comm.update_display(parking_id, 
+                                         parking_system.display_value,
+                                         parking_system.display_mode)
+>>>>>>> origin/main
 
         screen.fill(GRAY)
         gui.draw(screen, serial_comm)
@@ -46,12 +75,28 @@ def main():
         pygame.display.update()
         clock.tick(FPS)
 
+<<<<<<< HEAD
     # Guardar datos de ambos parqueos
+=======
+<<<<<<< HEAD
+    #Guardar datos de ambos parqueos
+=======
+    # Guardar datos de ambos parqueos
+>>>>>>> origin/main
+>>>>>>> Juan_MAC
     for parking_id in [1, 2]:
         parking_system = serial_comm.get_parking_system(parking_id)
             parking_system.save_data()
+<<<<<<< HEAD
         if parking_system:
             
+=======
+<<<<<<< HEAD
+
+=======
+            
+>>>>>>> origin/main
+>>>>>>> Juan_MAC
     serial_comm.disconnect()
     pygame.quit()
     sys.exit()
