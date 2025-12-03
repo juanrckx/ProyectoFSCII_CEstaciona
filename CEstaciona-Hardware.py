@@ -161,26 +161,42 @@ class ParkingHardware:
                 last_ldr2 = ldr2_occupied
                 
             #Enviar eventos de botones físicos
-                if enter_pressed:
+            if enter_pressed:
                     self.send_data({
                         'type': 'button_press',
                         'button': 'enter'
                     })
-                if exit_pressed:
+            if exit_pressed:
                     self.send_data({
                         'type': 'button_press',
                         'button': 'exit'
                         })
                     
                 #Actualizar LEDs
-                self.update_leds(ldr1_occupied, ldr2_occupied)
+            self.update_leds(ldr1_occupied, ldr2_occupied)
+            
+            #Procesar comandos de la PC
+            command = self.receive_data()
+            if command and command.get('parking_id') == self.parking_id:
+                self.handle_command(command)
                 
-                #Procesar comandos de la PC
-                command = self.receive_data()
-                if command and command.get('parking_id') == self.parking_id:
-                    self.handle_command(command)
-                    
-                time.sleep(0.05)
+            time.sleep(0.05)
+
+    def update_display(self, value, mode="spaces"):
+        try:
+            self.display_value = str(value)
+            self.display_mode = mode
+
+            if self.display_value in DIGIT_MAP:
+                segments = DIGIT_MAP[self.display_value]
+            else:
+                segments = DIGIT_MAP.get('0', [0, 0, 0, 0, 0, 0, 0])
+
+            for i, state in enumerate(segments):
+                SEGMENT_PINS[i].value(state)
+        
+        except Exception as e:
+            print(f"Error")
                 
     def handle_command(self, command):
         cmd_type = command.get('type')
