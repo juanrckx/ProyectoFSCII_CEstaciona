@@ -28,7 +28,7 @@ def main():
     
     # Variables para control de actualización
     last_display_update = 0
-    display_update_interval = 0.5  # Actualizar displays cada 0.5 segundos (no cada frame!)
+    display_update_interval = 1/60
     
     running = True
     while running:
@@ -59,7 +59,7 @@ def main():
                                                  parking_system.display_value,
                                                  parking_system.display_mode)
                     except Exception as e:
-                        print(f"⚠️ Error actualizando display {parking_id}: {e}")
+                        print(f"Error actualizando display {parking_id}: {e}")
             last_display_update = current_time
         
         # 3. Dibujar interfaz
