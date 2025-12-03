@@ -30,7 +30,7 @@ SERVO = PWM(Pin(15))
 SERVO.freq(50)
 
 #Comunicacion serial a través de UART(RX, TX, GND)
-uart = UART(0, baudrate=115200, tx=Pin(0), rx=pin(1))
+uart = UART(0, baudrate=115200, tx=Pin(0), rx=Pin(1))
 
 #Mapeo display 7 segmentos
 
@@ -108,7 +108,7 @@ class ParkingHardware:
     
     def update_leds(self, space1_occupied, space2_occupied):
         LED1.value(not space1_occupied) #LED ON = disponible
-        LED2.value(not space2_occupued)
+        LED2.value(not space2_occupied)
         
     def check_buttons(self):
         btn_enter_state = BTN_ENTER.value()
@@ -123,13 +123,13 @@ class ParkingHardware:
         return enter_pressed, exit_pressed
     
     
-    def control_barrier(self, state)
-    if state == "open":
-        self.set_servo_position(self.servo_open)
-        
-    else:
-        self.set_servo_position(self.servo_closed)
-        
+    def control_barrier(self, state):
+        if state == "open":
+            self.set_servo_position(self.servo_open)
+            
+        else:
+            self.set_servo_position(self.servo_closed)
+            
     
     def run(self):
         print(f"Parqueo {self.parking_id} iniciado")

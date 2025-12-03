@@ -212,13 +212,27 @@ class ParkingSystem:
             print(f"Error guardando datos: {e}")
 
     def load_data(self):
-        #Carga los datos desde un archivo json
+        """Carga los datos desde un archivo json"""
+        filename = f'data_parking{self.parking_id}.json'
+        
         try:
-            with open(f'data_parking{self.parking_id}.json', 'r') as f:
+            with open(filename, 'r') as f:
                 data = json.load(f)
                 self.parked_vehicles_historial = data.get('vehicle_historial', [])
                 self.exchange_rate = data.get('exchange_rate', 500)
                 self.last_exchange_update = data.get('last_exchange_update', 0)
+                # Comenta la siguiente línea para no mostrar mensaje
+                # print(f"Datos cargados para Parqueo {self.parking_id}")
+                
         except FileNotFoundError:
-            print(f"Archivo de datos para parqueo {self.parking_id} no encontrado, empezando con datos vacíos")
-#aasdasdaadsa
+            # Cambia este mensaje o coméntalo
+            # print(f"Archivo {filename} no encontrado, creando nuevo")
+            
+            # Crear estructura inicial vacía
+            self.parked_vehicles_historial = []
+            self.exchange_rate = 500
+            self.last_exchange_update = 0
+            
+        except Exception as e:
+            # print(f"Error cargando datos: {e}")  # También puedes comentar esto
+            self.parked_vehicles_historial = []

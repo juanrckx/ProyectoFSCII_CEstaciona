@@ -118,8 +118,8 @@ class ParkingGUI:
             return
 
         #Obtener estadisticas
-        stats1 = parking1.get_status()
-        stats2 = parking2.get_status()
+        stats1 = parking1.get_stats()
+        stats2 = parking2.get_stats()
 
         #Calcular totales combinados
         total_vehicles = stats1['total_vehicles'] + stats2['total_vehicles']

@@ -1,0 +1,9 @@
+{
+  "vehicle_historial": [],
+  "config": {
+    "base_fee": 1000,
+    "total_space": 2
+  },
+  "exchange_rate": 488.55,
+  "last_exchange_update": 1764724118.3889346
+}

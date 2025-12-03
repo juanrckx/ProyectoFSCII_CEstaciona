@@ -1,0 +1,19 @@
+{
+  "vehicle_historial": [
+    {
+      "vehicle_id": "V1764724124",
+      "entry_time": "19:08:44",
+      "exit_time": 1764724173.179922,
+      "parked_time": 48.375017166137695,
+      "fee": 4000,
+      "entry_time_str": "19:08:44",
+      "exit_time_str": "19:09:33"
+    }
+  ],
+  "config": {
+    "base_fee": 1000,
+    "total_space": 2
+  },
+  "exchange_rate": 488.55,
+  "last_exchange_update": 1764724118.3889346
+}
