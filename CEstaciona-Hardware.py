@@ -54,7 +54,14 @@ class ParkingHardware:
         self.display_value = "2"
 
         self.setup_servo()
+        self.initialize_display()
         
+    
+    def initialize_display(self):
+        for pin in SEGMENT_PINS:
+            pin.value(0)
+        COMMON_PIN.value(0)
+
     def setup_servo(self):
         self.set_servo_position(self.servo_closed)
     
@@ -173,7 +180,7 @@ class ParkingHardware:
                 if command and command.get('parking_id') == self.parking_id:
                     self.handle_command(command)
                     
-                time.sleep(0.1)
+                time.sleep(0.05)
                 
     def handle_command(self, command):
         cmd_type = command.get('type')
