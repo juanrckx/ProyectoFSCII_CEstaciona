@@ -8,6 +8,7 @@ class SerialCommunication:
     def __init__(self, ports=['COM8', 'COM7']):
         self.ports = ports
         self.serial_conns = {}
+        self.parking_systems = {}
         self.running = False
         self.threads = {}
 
@@ -152,7 +153,7 @@ class SerialCommunication:
         })
 
     def get_parking_system(self, parking_id):
-        return self.get_parking_system.get(parking_id)
+        return self.parking_systems.get(parking_id)
     
     def get_all_parking_systems(self):
         return self.parking_systems
