@@ -23,7 +23,7 @@ class WiFiCommunication:
     def start_server_for_parking(self, parking_id):
         port = self.base_port + parking_id
         
-        print(f"\n🔧 INICIANDO SERVIDOR PARQUEO {parking_id}")
+        print(f"INICIANDO SERVIDOR PARQUEO {parking_id}")
         print(f"   Puerto: {port}")
         print(f"   Host: {self.host}")
         print(f"   IPs disponibles de la PC:")
@@ -42,13 +42,12 @@ class WiFiCommunication:
         try:
             server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             
-            # ⚠️ ESTA LÍNEA ES CRÍTICA ⚠️
             server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             
             # Vincular a TODAS las interfaces
             server.bind((self.host, port))
             
-            # ⚠️ AUMENTAR backlog a 5 ⚠️
+            #AUMENTAR backlog a 5
             server.listen(5)
             server.settimeout(5)  # Timeout mayor
             
@@ -56,27 +55,27 @@ class WiFiCommunication:
             
             # Obtener dirección real del socket
             sockname = server.getsockname()
-            print(f"✅ Servidor REALMENTE escuchando en:")
+            print(f"Servidor REALMENTE escuchando en:")
             print(f"   {sockname[0]}:{sockname[1]}")
             print(f"   Puerto real: {sockname[1]}")
             
             # Función para aceptar conexiones
             def handle_parking_connection():
-                print(f"   🧵 Hilo aceptador INICIADO")
+                print(f"Hilo aceptador INICIADO")
                 
                 connection_count = 0
                 while self.running:
                     try:
                         print(f"   Parqueo {parking_id}: Esperando conexión #{connection_count + 1}...")
                         
-                        # ⚠️ ACEPTAR con timeout
+                        #ACEPTAR con timeout
                         client, addr = server.accept()
                         connection_count += 1
                         
-                        print(f"   🎉 CONEXIÓN #{connection_count} ACEPTADA de {addr}")
+                        print(f"CONEXIÓN #{connection_count} ACEPTADA de {addr}")
                         
                         # Configurar socket del cliente
-                        client.settimeout(10.0)  # ⚠️ Timeout largo inicial
+                        client.settimeout(10.0)  #Timeout largo inicial
                         client.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
                         
                         with self.lock:
@@ -111,7 +110,7 @@ class WiFiCommunication:
                         # Timeout normal en accept()
                         continue
                     except Exception as e:
-                        print(f"❌ Error aceptando conexión: {e}")
+                        print(f"Error aceptando conexión: {e}")
                         import traceback
                         traceback.print_exc()
                         time.sleep(1)
@@ -125,16 +124,16 @@ class WiFiCommunication:
             connection_thread.start()
             self.threads[parking_id] = connection_thread
             
-            print(f"✅ Hilo aceptador para Parqueo {parking_id} INICIADO")
+            print(f"Hilo aceptador para Parqueo {parking_id} INICIADO")
             
         except Exception as e:
-            print(f"❌ ERROR GRAVE iniciando servidor: {e}")
+            print(f"ERROR GRAVE iniciando servidor: {e}")
             import traceback
             traceback.print_exc()
 
     def receive_from_parking(self, parking_id, client_socket):
         """Recibir datos con manejo mejorado de errores"""
-        print(f"📡 Iniciando recepción para Parqueo {parking_id}")
+        print(f"Iniciando recepción para Parqueo {parking_id}")
         
         buffer = ""
         message_count = 0
@@ -146,13 +145,13 @@ class WiFiCommunication:
                     data = client_socket.recv(1024)
                     
                     if not data:
-                        print(f"🔌 Parqueo {parking_id}: Conexión cerrada por cliente")
+                        print(f"Parqueo {parking_id}: Conexión cerrada por cliente")
                         break
                     
                     message_count += 1
                     buffer += data.decode('utf-8', errors='ignore')
                     
-                    print(f"📨 Parqueo {parking_id}: Recibido chunk #{message_count}, buffer: {len(buffer)} chars")
+                    print(f"Parqueo {parking_id}: Recibido chunk #{message_count}, buffer: {len(buffer)} chars")
                     
                     # Procesar todas las líneas completas
                     while '\n' in buffer:
@@ -160,7 +159,7 @@ class WiFiCommunication:
                         line = line.strip()
                         
                         if line:
-                            print(f"📝 Parqueo {parking_id}: Procesando: {line[:80]}...")
+                            print(f"Parqueo {parking_id}: Procesando: {line[:80]}...")
                             self.process_message(parking_id, line)
                     
                     # Reducir timeout después del primer mensaje
@@ -171,18 +170,18 @@ class WiFiCommunication:
                     # Timeout normal para lectura no bloqueante
                     continue
                 except ConnectionResetError:
-                    print(f"🔌 Parqueo {parking_id}: Conexión reseteada por el cliente")
+                    print(f"Parqueo {parking_id}: Conexión reseteada por el cliente")
                     break
                 except Exception as e:
-                    print(f"⚠️  Parqueo {parking_id}: Error en recepción: {e}")
+                    print(f"Parqueo {parking_id}: Error en recepción: {e}")
                     break
             
         except Exception as e:
-            print(f"❌ Parqueo {parking_id}: Error crítico en hilo receptor: {e}")
+            print(f"Parqueo {parking_id}: Error crítico en hilo receptor: {e}")
         
         finally:
             # Limpieza
-            print(f"🧹 Parqueo {parking_id}: Limpiando conexión...")
+            print(f"Parqueo {parking_id}: Limpiando conexión...")
             with self.lock:
                 if parking_id in self.clients and self.clients[parking_id] == client_socket:
                     try:
@@ -192,7 +191,7 @@ class WiFiCommunication:
                     self.clients.pop(parking_id, None)
                     self.client_addresses.pop(parking_id, None)
             
-            print(f"📴 Parqueo {parking_id}: Desconectado (recibió {message_count} mensajes)")
+            print(f"Parqueo {parking_id}: Desconectado (recibió {message_count} mensajes)")
             
     def process_message(self, parking_id, message):
         try:
@@ -244,7 +243,7 @@ class WiFiCommunication:
             if button == 'enter':
                 vehicle_id, space = parking_system.enter_vehicle()
                 if vehicle_id:
-                    print(f"🚗 Parqueo {parking_id}: Vehículo {vehicle_id} entró al espacio {space}")
+                    print(f"Parqueo {parking_id}: Vehículo {vehicle_id} entró al espacio {space}")
                     self.control_barrier(parking_id, 'open')
                     
                     # Actualizar display
@@ -266,11 +265,11 @@ class WiFiCommunication:
                 else:
                     vehicle_id, fee = parking_system.request_exit()
                     if vehicle_id:
-                        print(f"💰 Parqueo {parking_id}: Costo {fee} CRC")
+                        print(f"Parqueo {parking_id}: Costo {fee} CRC")
                         self.update_display(parking_id, fee // 1000, 'fee')
         
         elif msg_type == 'connection':
-            print(f"📡 Parqueo {parking_id}: {message.get('status', 'connected')}")
+            print(f"Parqueo {parking_id}: {message.get('status', 'connected')}")
             # Enviar estado actual al parqueo
             self.update_display(parking_id, parking_system.available_space, 'spaces')
     
@@ -290,7 +289,7 @@ class WiFiCommunication:
             client.send(message.encode())
             return True
         except Exception as e:
-            print(f"❌ Error enviando a Parqueo {parking_id}: {e}")
+            print(f"Error enviando a Parqueo {parking_id}: {e}")
             
             # Intentar limpiar conexión fallida
             with self.lock:
@@ -305,19 +304,19 @@ class WiFiCommunication:
     
     def start(self):
         """Iniciar todos los servidores"""
-        print("🚀 Iniciando servidores WiFi para ambos parqueos...")
+        print("Iniciando servidores WiFi para ambos parqueos...")
         self.running = True
         
         # Iniciar servidores para ambos parqueos
         for parking_id in [1, 2]:
             self.start_server_for_parking(parking_id)
         
-        print("✅ Servidores WiFi iniciados. Esperando conexiones...")
+        print("Servidores WiFi iniciados. Esperando conexiones...")
         return True
     
     def stop(self):
         """Detener todos los servidores"""
-        print("🛑 Deteniendo servidores WiFi...")
+        print("Deteniendo servidores WiFi...")
         self.running = False
         
         # Cerrar todas las conexiones
@@ -337,7 +336,7 @@ class WiFiCommunication:
             self.clients.clear()
             self.servers.clear()
         
-        print("✅ Servidores WiFi detenidos.")
+        print("Servidores WiFi detenidos.")
     
     # Métodos de interfaz (iguales que en serial_com.py)
     def update_display(self, parking_id, value, mode="spaces"):

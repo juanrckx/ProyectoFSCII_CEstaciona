@@ -8,6 +8,42 @@
       "fee": 1000,
       "entry_time_str": "07:54:57",
       "exit_time_str": "07:55:02"
+    },
+    {
+      "vehicle_id": "V1764776562",
+      "entry_time": "09:42:42",
+      "exit_time": 1764776866.5832171,
+      "parked_time": 304.33727979660034,
+      "fee": 30000,
+      "entry_time_str": "09:42:42",
+      "exit_time_str": "09:47:46"
+    },
+    {
+      "vehicle_id": "V1764776563",
+      "entry_time": "09:42:43",
+      "exit_time": 1764776867.5503585,
+      "parked_time": 304.4776818752289,
+      "fee": 30000,
+      "entry_time_str": "09:42:43",
+      "exit_time_str": "09:47:47"
+    },
+    {
+      "vehicle_id": "V1764777356",
+      "entry_time": "09:55:56",
+      "exit_time": 1764777525.1175218,
+      "parked_time": 168.34069299697876,
+      "fee": 16000,
+      "entry_time_str": "09:55:56",
+      "exit_time_str": "09:58:45"
+    },
+    {
+      "vehicle_id": "V1764777533",
+      "entry_time": "09:58:53",
+      "exit_time": 1764777584.380929,
+      "parked_time": 51.335161209106445,
+      "fee": 5000,
+      "entry_time_str": "09:58:53",
+      "exit_time_str": "09:59:44"
     }
   ],
   "config": {
@@ -15,5 +51,5 @@
     "total_space": 2
   },
   "exchange_rate": 489.96,
-  "last_exchange_update": 1764768390.559364
+  "last_exchange_update": 1764776485.100456
 }

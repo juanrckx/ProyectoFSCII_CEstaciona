@@ -3,9 +3,9 @@
 
 # Configuración de la red WiFi
 WIFI_CONFIG = {
-    'ssid': 'Casa4',        # Cambiar por tu SSID
-    'password': 'cartago04',    # Cambiar por tu contraseña
-    'server_ip': '192.168.18.15', # IP de la PC servidor
+    'ssid': 'S25 Ultra de jonathan',        # Cambiar por tu SSID
+    'password': 'PeneVolador06',    # Cambiar por tu contraseña
+    'server_ip': '10.141.34.161', # IP de la PC servidor
     'server_port_base': 5000      # Puerto base
 }
 
