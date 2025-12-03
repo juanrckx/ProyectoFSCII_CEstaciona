@@ -1,19 +1,91 @@
 {
   "vehicle_historial": [
     {
-      "vehicle_id": "V1764724124",
-      "entry_time": "19:08:44",
-      "exit_time": 1764724173.179922,
-      "parked_time": 48.375017166137695,
+      "vehicle_id": "V1764766027",
+      "entry_time": "06:47:07",
+      "exit_time": 1764766045.028996,
+      "parked_time": 17.991132020950317,
+      "fee": 1000,
+      "entry_time_str": "06:47:07",
+      "exit_time_str": "06:47:25"
+    },
+    {
+      "vehicle_id": "V1764766041",
+      "entry_time": "06:47:21",
+      "exit_time": 1764766046.4308944,
+      "parked_time": 5.2822160720825195,
+      "fee": 1000,
+      "entry_time_str": "06:47:21",
+      "exit_time_str": "06:47:26"
+    },
+    {
+      "vehicle_id": "V1764769178",
+      "entry_time": "07:39:38",
+      "exit_time": 1764769387.5003006,
+      "parked_time": 208.9001522064209,
+      "fee": 20000,
+      "entry_time_str": "07:39:38",
+      "exit_time_str": "07:43:07"
+    },
+    {
+      "vehicle_id": "V1764769356",
+      "entry_time": "07:42:36",
+      "exit_time": 1764769403.0589051,
+      "parked_time": 46.78761267662048,
       "fee": 4000,
-      "entry_time_str": "19:08:44",
-      "exit_time_str": "19:09:33"
+      "entry_time_str": "07:42:36",
+      "exit_time_str": "07:43:23"
+    },
+    {
+      "vehicle_id": "V1764769580",
+      "entry_time": "07:46:20",
+      "exit_time": 1764769584.390785,
+      "parked_time": 3.6546125411987305,
+      "fee": 1000,
+      "entry_time_str": "07:46:20",
+      "exit_time_str": "07:46:24"
+    },
+    {
+      "vehicle_id": "V1764769581",
+      "entry_time": "07:46:21",
+      "exit_time": 1764769585.3692594,
+      "parked_time": 3.8196680545806885,
+      "fee": 1000,
+      "entry_time_str": "07:46:21",
+      "exit_time_str": "07:46:25"
+    },
+    {
+      "vehicle_id": "V1764769665",
+      "entry_time": "07:47:45",
+      "exit_time": 1764769669.4733944,
+      "parked_time": 4.269157648086548,
+      "fee": 1000,
+      "entry_time_str": "07:47:45",
+      "exit_time_str": "07:47:49"
+    },
+    {
+      "vehicle_id": "V1764769666",
+      "entry_time": "07:47:46",
+      "exit_time": 1764769670.2393103,
+      "parked_time": 4.212394714355469,
+      "fee": 1000,
+      "entry_time_str": "07:47:46",
+      "exit_time_str": "07:47:50"
+    },
+    {
+      "vehicle_id": "V1764770428",
+      "entry_time": "08:00:28",
+      "exit_time": 1764770428.1826558,
+      "parked_time": 0.02298283576965332,
+      "fee": 1000,
+      "entry_time_str": "08:00:28",
+      "exit_time_str": "08:00:28"
     }
   ],
   "config": {
     "base_fee": 1000,
     "total_space": 2
   },
-  "exchange_rate": 488.55,
-  "last_exchange_update": 1764724118.3889346
+  "exchange_rate": 489.96,
+  "last_exchange_update": 1764768392.304132
 }
